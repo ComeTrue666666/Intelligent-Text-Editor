@@ -1,5 +1,4 @@
 // src/predictive/predictiveEngine.js
-// Orchestrates predictive behavior: list rules + heading rules.
 
 (function (global) {
   /**
