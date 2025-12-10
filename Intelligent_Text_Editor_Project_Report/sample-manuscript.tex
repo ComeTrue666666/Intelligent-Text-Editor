@@ -1,0 +1,311 @@
+%%
+%% This is file `sample-manuscript.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `all,proceedings,bibtex,manuscript')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sample-manuscript.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+
+
+\documentclass[sigconf]{acmart}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{An Adaptive Intelligent Text Editor with Usage-Aware Toolbars and Integrated AI Assistance}
+
+\author{Kangshuai Ni}
+\affiliation{%
+\institution{Stony Brook University}
+\department{Department of Computer Science}
+}
+\email{[kangshuai.ni@stonybrook.edu](mailto:kangshuai.ni@stonybrook.edu)}
+
+\begin{document}
+
+\begin{abstract}
+Modern text editors provide a wide range of editing tools, but most rely on static toolbars that force users to repeatedly search for rarely used commands. This leads to unnecessary cognitive load and slows down everyday writing tasks. In this project, we present an adaptive text editor that dynamically reorganizes its toolbar based on user interaction patterns and integrates an AI assistant for direct text manipulation. Our system automatically prioritizes frequently used tools, supports drag-and-drop customization, and allows users to apply AI-generated edits directly inside the editor. A functional prototype built with Electron demonstrates that adaptive interfaces combined with lightweight AI assistance can improve efficiency and create a more personalized editing experience.
+\end{abstract}
+
+\keywords{Adaptive Interfaces, Text Editors, Human-Computer Interaction, AI-assisted Writing}
+
+\maketitle
+
+\section{Introduction}
+
+Text editors are among the most frequently used software tools in both academic and professional environments. They serve as the primary interface for activities such as programming, technical writing, note taking, documentation, and collaborative content creation. Because users spend a significant amount of time interacting with text editors, even small inefficiencies in their design can accumulate into substantial productivity loss over time.
+
+As computing tasks have grown more complex, modern text editors have evolved from simple text manipulation tools into feature-rich environments that support formatting, styling, automation, and intelligent assistance. While these additions increase expressive power, they also introduce increasingly complex user interfaces. Many modern editors expose a large number of commands simultaneously, often through dense menus and static toolbars. This complexity can overwhelm users and distract from the primary task of writing or editing text.
+
+This project explores how a text editor can become more responsive to individual user behavior by adapting its interface dynamically and by integrating AI-assisted text manipulation directly into the editing environment.
+
+\subsection{Background}
+
+Early text editors, such as command-line-based editors and basic graphical text editors, provided a limited set of clearly defined operations. Their interfaces were minimal, and users interacted with a small number of commands repeatedly. As graphical user interfaces became standard, editors began to incorporate toolbars, icons, and menus to improve discoverability and ease of access.
+
+Over time, software designers added more features to accommodate a broader range of use cases. Modern text editors now support rich text formatting, multiple file formats, export options, themes, plugins, and automation tools. To expose these capabilities, interfaces grew more complex, often relying on static layouts that display all available tools at once. While this design ensures feature visibility, it does not reflect how users actually interact with the editor in practice.
+
+Research in human-computer interaction has shown that users typically rely on a small subset of available features while ignoring the rest. Prior work has explored customizable interfaces, allowing users to rearrange toolbars or assign keyboard shortcuts. However, these approaches require users to invest time and effort to manually tailor the interface, which can be a barrier for novice users and an ongoing maintenance burden for experienced users.
+
+More recent work on adaptive user interfaces investigates systems that automatically adjust their behavior based on observed user actions. These systems aim to reduce cognitive load by prioritizing frequently used elements and minimizing unnecessary distractions. This project builds on these ideas by applying automatic adaptation specifically to the toolbar of a text editor, a central component of daily interaction.
+
+\subsection{Motivation}
+
+Despite the availability of advanced customization options, most text editors still rely on static toolbars by default. In these layouts, tools remain in fixed positions regardless of how often they are used. As a result, users are forced to repeatedly scan the interface to locate commonly used actions, even after long periods of use. This repeated visual search increases cognitive load and slows down interaction.
+
+For novice users, static toolbars can be confusing and intimidating. Without prior knowledge of tool functions or locations, users may struggle to identify relevant actions among many icons. For expert users, the problem manifests differently: rarely used tools occupy valuable space and visually compete with frequently used commands, disrupting efficient workflows.
+
+In addition to interface inefficiency, modern text editing often involves repetitive and high-level text manipulation tasks. Users frequently rewrite sentences, adjust tone, summarize content, or insert boilerplate text. While recent advances in large language models enable these tasks through natural language interaction, many existing tools require users to switch to external applications or browser-based interfaces. This context switching interrupts focus and fragments the writing process.
+
+The motivation of this project is to reduce both interface friction and workflow disruption by shifting the burden of adaptation from the user to the system. Instead of requiring users to manually configure their environment or switch contexts for intelligent assistance, the editor should adapt automatically and provide advanced functionality within the same workspace.
+
+\subsection{Approach}
+
+To address these challenges, this project implements an adaptive text editor that continuously observes user interaction patterns and adjusts the interface accordingly. The system tracks how often each toolbar tool is used during editing sessions. Based on this usage data, the toolbar dynamically updates the visual prominence of tools by adjusting their size and position.
+
+Frequently used tools are emphasized, making them easier to locate and faster to access, while rarely used tools are visually deemphasized. This adaptive behavior allows the interface to gradually evolve to reflect individual user habits without requiring explicit configuration or manual intervention.
+
+In parallel with interface adaptation, the editor integrates an AI assistant directly into the editing environment. The assistant allows users to issue natural language instructions, such as rewriting text, inserting new content, or modifying existing sections. Unlike external AI tools, the assistant operates within the same interface and can apply changes directly to the document with a single action. The system also maintains a persistent interaction history, enabling iterative refinement of AI-assisted edits.
+
+\subsection{Overview of Innovation}
+
+The primary innovation of this project lies in the tight integration of adaptive user interface techniques and AI-assisted text manipulation within a single text editor. While prior systems have explored interface customization or AI-based writing assistance independently, this project combines both approaches in a unified workflow.
+
+The adaptive toolbar reduces visual clutter and interaction cost by automatically prioritizing tools based on real usage data. At the same time, the embedded AI assistant eliminates the need for context switching and enables high-level text operations to be performed seamlessly during editing. Together, these features create an editor that evolves alongside the user and supports both low-level editing actions and high-level content transformation.
+
+\subsection{Overview of Results}
+
+The implemented prototype demonstrates that usage-aware toolbar adaptation can successfully reorganize interface elements to better match individual interaction patterns. Over time, frequently used tools become more accessible, while infrequently used tools recede into secondary positions, reducing visual noise.
+
+The integrated AI assistant enables efficient text manipulation through natural language interaction and allows changes to be applied directly within the editor. These results indicate that combining adaptive interface design with embedded AI support can improve usability and workflow continuity, suggesting a promising direction for future intelligent text editing systems.
+
+
+\section{Related Work}
+
+Prior work in human-computer interaction has explored adaptive menus and usage-based interface customization to reduce selection time and cognitive load. Systems such as adaptive toolbars and frequency-based menus have shown that reordering interface elements based on user behavior can improve efficiency over static layouts. Separately, AI-assisted writing tools have become popular for tasks such as rewriting, summarization, and grammar correction.
+
+Unlike traditional editors that treat these ideas independently, our work combines usage-aware interface adaptation with an embedded AI agent that can directly modify editor content. This integration allows both the interface and the editing process itself to adapt to the user.
+
+\section{System Design and Implementation}
+This section describes the technical design and implementation details of the adaptive intelligent text editor. The goal of this section is to explain how the system works clearly enough that a reader can understand, evaluate, and reproduce the core ideas, following the project report guideline for technical depth.
+
+\subsection{Overall Architecture}
+The editor is implemented as a desktop application using Electron, which enables cross-platform deployment using web technologies. The system follows a two-process architecture: a main process and a renderer process. The main process is responsible for application lifecycle management, window creation, and file system access. The renderer process handles all user-facing functionality, including the text editor interface, adaptive toolbar logic, usage tracking, and AI assistant interaction.
+
+Within the renderer process, the system is further modularized into components responsible for editor state management, toolbar rendering, usage statistics collection, and AI communication. This separation of concerns simplifies development and makes the system easier to extend. For example, the adaptive toolbar logic operates independently from the AI assistant, allowing each component to evolve without tight coupling changes.
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=0.5\linewidth]{app_ui_overview.png}
+  \caption{The general structure of the text editor UI.}
+  \label{fig:app_ui_overview}
+\end{figure}
+
+\subsection{Adaptive Toolbar Design}
+\begin{figure}[H]
+  \centering
+\includegraphics[width=0.5\linewidth]{toolbar_freq.png}
+  \caption{The frequency adjustment UI in the toolbar}
+  \label{fig:Toolbar Example}
+\end{figure}
+The adaptive toolbar is the core technical contribution of the system. Traditional text editors rely on static toolbars where tools are placed in fixed positions determined at design time. This approach assumes that all users have similar needs, which rarely holds in practice. In contrast, the proposed system continuously adapts the toolbar based on the actual behavior of the user.
+
+Each toolbar tool is associated with a usage counter that records the frequency with which the tool is activated. When a user clicks on a tool, its counter is incremented. At regular intervals, the system recomputes a priority score for each tool based on its frequency of use. Tools with higher scores are assigned higher visual priority and are rendered in more prominent positions within the toolbar.
+
+Visual priority is expressed through both position and size. Frequently used tools appear closer to the center of the toolbar and are displayed with larger icons, making them easier to locate and activate. Less frequently used tools gradually move toward the periphery and shrink in size. This design reduces visual clutter while preserving access to all functionality.
+
+To avoid sudden and disruptive changes, toolbar adaptation is applied incrementally. The system limits how much a tool can move or resize within a single update cycle. Smooth transitions are used to animate layout changes, allowing users to maintain spatial awareness of tool locations. This design choice is critical for maintaining usability in adaptive interfaces.
+
+\subsection{Manual Customization and User Control}
+
+Although the system includes automatic adaptation to optimize toolbar layout, the design intentionally avoids fully autonomous behavior. During development, a key concern was that unexpected interface changes could confuse users or reduce trust. To address this, manual customization is implemented as a core interaction mechanism rather than an optional override.
+
+The toolbar is implemented as a collection of draggable tool components, each rendered as an independent UI element with an associated tool identifier. Drag-and-drop behavior is handled directly in the renderer layer, where mouse events are tracked to detect drag start, hover position, and drop location. When a user drags a tool icon and releases it at a new position, the system immediately updates the visual ordering of the toolbar without requiring a refresh or reload.
+
+Behind the scenes, each manual reorder action triggers an explicit state update in the toolbar management logic. The new tool order is stored as a user-defined layout rather than being treated as a transient UI change. This layout is persisted locally so that the customized arrangement is preserved across editor sessions. As a result, users experience a stable and predictable interface that reflects their personal workflow.
+
+Manual interactions are also fed into the adaptation logic as high-confidence signals of user intent. When a tool is manually repositioned, the adaptive ranking engine temporarily suppresses automatic reordering for that tool set. This is implemented by assigning higher priority weights to manually positioned tools and marking them as “locked” for adaptation. During this period, usage frequency continues to be tracked, but it does not immediately override the user’s explicit layout choice.
+
+Over time, the system gradually re-enables automatic adaptation by decaying the manual override weight. This allows frequently used tools to become more prominent again, but only if their usage consistently justifies a layout change. In practice, this creates a smooth transition where the interface evolves slowly rather than changing abruptly, reducing cognitive load for the user.
+
+This hybrid control model was developed to combine the strengths of both adaptive and user-driven interfaces. Automatic adaptation reduces repetitive effort by surfacing commonly used tools, while manual customization ensures that users always remain in control of the interface structure. By encoding manual actions as first-class signals in the system logic, the editor achieves a balance between intelligent behavior and user trust, which is a central goal of the project’s interaction design.
+
+\subsection{Usage Tracking and State Management}
+Usage tracking is implemented as a lightweight local data structure that records tool interaction counts during an editing session. The data is stored in memory and periodically synchronized with persistent storage to maintain consistency across sessions.
+
+Each tool is represented by a unique identifier, allowing usage statistics to be associated reliably even if the toolbar layout changes. This design avoids ambiguity and ensures that adaptation decisions are based on stable identifiers rather than visual positions. The system also maintains editor state information such as current theme, layout configuration, and toolbar position.
+
+\subsection{Adaptive Toolbar Interface}
+\begin{figure}[H]
+  \centering
+\includegraphics[width=0.5\linewidth]{toolbar_left.png}
+  \caption{Adaptive toolbar displayed in different configurations. The toolbar can be positioned at the top or left of the editor and dynamically resizes tools based on usage frequency. Frequently used tools become more prominent, while less-used tools shrink and move toward secondary positions.}
+  \label{fig:toolbar_left}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=0.5\linewidth]{toolbar_top.png}
+  \caption{Adaptive toolbar displayed at the top of the editor.}
+  \label{fig:toolbar_top}
+\end{figure}
+
+ Figure 1 and 2 illustrates the adaptive toolbar in multiple configurations. The toolbar can be positioned at different locations, such as the top or left side of the editor, allowing users to choose layouts that best fit their workflow. This flexibility is particularly important for accommodating different screen sizes and user preferences.
+
+In addition to positional flexibility, the toolbar visually adapts based on usage frequency. Tools that are used more often become larger and easier to access, while infrequently used tools gradually shrink and move toward less prominent positions. This design reduces visual clutter and shortens the time required to locate commonly used actions.
+
+The toolbar also supports grouped formatting controls, such as font size, color, and list styles. By dynamically resizing and reorganizing these controls, the system emphasizes the most relevant actions without removing functionality. Smooth animations are used when the layout changes, helping users maintain spatial awareness and preventing confusion caused by sudden interface shifts.
+
+
+
+\subsection{AI Assistant Architecture}
+The AI assistant is implemented as a first-class component of the editor rather than an external service or popup tool. Architecturally, it is designed as a persistent side panel that lives alongside the text editor and shares access to the editor’s document state. This design allows the assistant to operate on real editor content while remaining visually and functionally separate from the main writing area.
+
+From an implementation perspective, the assistant is initialized during the renderer startup phase together with the editor core. The UI for the assistant consists of three tightly connected parts: a prompt input area, a conversation history view, and an action control area used to apply or discard generated output. The conversation history is maintained locally so that each user query and model response can be displayed sequentially, allowing users to reason about changes over time rather than treating the assistant as a stateless command tool.
+
+When a user submits a prompt, the system first determines the current editor context. If text is selected, the selected range is extracted directly from the editor’s internal document model. If no selection exists, the assistant operates on the full document or inserts content at the cursor location, depending on the user request. This context extraction step is intentionally explicit in code, ensuring that the AI never has implicit or hidden access to editor state.
+
+The extracted text and user prompt are then packaged into a structured request object and sent to a locally deployed large language model backend. The system uses a local model deployment rather than a cloud API to reduce external dependencies and preserve user privacy. Communication with the model is handled asynchronously so that the editor UI remains responsive even when the model response time is slow. During this period, the assistant panel displays a loading state, clearly signaling to the user that the request is being processed.
+
+Once the model returns a response, the generated text is rendered only inside the assistant panel and never directly modifies the document. This is a deliberate architectural decision enforced in the code: there is no execution path that allows model output to bypass user confirmation. Instead, the assistant exposes a single explicit “Apply” action. When clicked, the editor inserts or replaces text using the same internal editing APIs as manual user input, ensuring consistency with undo/redo behavior and other editor features.
+
+This confirmation-based workflow was chosen to prevent unintended or destructive edits, a common risk in AI-assisted writing tools. By separating generation from application, users can review, reject, or re-prompt without losing control of their document. From a systems perspective, this also simplifies debugging and evaluation, as AI output remains isolated until explicitly committed.
+
+Overall, the AI assistant is designed as a cooperative tool rather than an autonomous agent. Its architecture emphasizes transparency, user control, and clear boundaries between human input, AI generation, and document modification. This approach aligns with the project’s broader goal of augmenting user productivity without sacrificing predictability or trust in the editing experience.
+
+\subsection{Applying AI-Generated Edits}
+The application of AI-generated content is implemented as a controlled editing operation that integrates tightly with the editor’s existing document model. During development, a primary goal was to make AI assistance feel as seamless as manual editing, while still preserving safety, transparency, and full user control.
+
+When an AI response is generated, the system does not immediately modify the document. Instead, the generated text is stored temporarily in the assistant’s internal state and displayed only in the assistant panel. At this stage, the editor records the current cursor position and any active text selection range. This snapshot is important because it ensures that the AI output is applied to the exact region the user intended, even if the user continues to scroll or interact with the interface before confirming the change.
+
+When the user clicks the “Apply” action, the editor invokes the same internal text manipulation functions used for standard user edits. If a text selection exists, the selected range is replaced with the AI-generated content. If no selection exists, the content is inserted at the current cursor position. This design avoids special-case logic and guarantees compatibility with existing editor features such as undo/redo, cursor movement, and formatting rules.
+
+From an implementation standpoint, treating AI edits as regular editor operations was a deliberate design choice. By routing all changes through the same editing pipeline, the system maintains a consistent document state and avoids synchronization issues between AI actions and manual user input. As a result, users can undo an AI-applied edit in exactly the same way they would undo a keystroke, reinforcing predictability.
+
+All AI interactions are also recorded in a session-based chat history maintained within the renderer process. Each entry stores the user prompt, the associated editor context, and the model’s generated response. This history is rendered sequentially in the assistant panel, allowing users to review prior iterations and understand how a piece of text evolved over multiple prompts. The chat log is scoped to the current editing session, keeping the interface lightweight while still supporting iterative refinement.
+
+This logging mechanism serves both usability and transparency goals. Users can easily revisit earlier prompts to refine or reapply ideas, and they can clearly see which changes originated from the AI versus their own manual edits. By making AI-generated content traceable and reversible, the system reinforces trust and positions the assistant as a collaborative editing aid rather than an opaque automation tool.
+
+\subsection{User Interface Features}
+\begin{figure}[H]
+  \centering
+\includegraphics[width=0.5\linewidth]{dark_mode.png}
+  \caption{The dark mode in text editor}
+  \label{fig:dark_mode}
+\end{figure}
+Beyond adaptation and AI assistance, the editor includes several usability-focused features. Users can switch between light and dark themes to match their environment and preferences, as shown in figure 5. The layout is responsive, allowing the toolbar and AI panel to be repositioned or resized based on screen size.
+
+The editor supports basic file saving and exporting, enabling users to preserve their work when finished. These features ensure that the system functions as a complete editor rather than a standalone prototype.
+
+\subsection{AI Assistant Interface and Interaction Flow}
+\begin{figure}[H]
+  \centering
+\includegraphics[width=0.6\linewidth]{ai_panel_ui.png}
+  \caption{The AI agent panel for the user to input prompt and gets AI response}
+  \label{fig:ai_panel_ui}
+\end{figure}
+
+Figure~\ref{fig:ai_panel_ui} shows the integrated AI assistant panel embedded directly within the editor interface. The assistant allows users to issue natural language requests, such as rewriting text, shortening paragraphs, or changing tone, without leaving the editing environment.
+
+A persistent chat history is displayed to provide transparency and support iterative refinement. Users can review previous prompts and responses, making it easier to understand how changes were generated. This history also helps users experiment with multiple variations before deciding on a final edit.
+
+A key design decision is that AI-generated content is not automatically inserted into the document. Instead, users explicitly apply changes with a single button click. This interaction model preserves user control and prevents unintended modifications, which is critical when integrating generative AI into productivity tools.
+
+
+\subsection{Design Decisions and Trade-offs}
+Throughout the development of the system, several design decisions required explicit trade-offs between performance, flexibility, complexity, and user trust. These trade-offs are reflected directly in the system architecture and implementation rather than being abstract design preferences.
+
+A major architectural decision was the use of a locally deployed large language model instead of a cloud-based API. This choice improves privacy by keeping all document content and user prompts on the local machine and allows the editor to function without network connectivity. However, during implementation it became clear that local inference introduces significant performance constraints. Model response time varies depending on model size and available hardware resources, and memory usage can become a limiting factor when stronger reasoning models are selected. To mitigate this, the system was designed to handle AI requests asynchronously and to clearly signal loading states in the UI, prioritizing responsiveness over raw generation speed.
+
+Another key trade-off involves the degree of interface adaptivity. The adaptive toolbar improves efficiency by surfacing frequently used tools, but aggressive reordering can disrupt spatial memory and lead to user confusion. In the implementation, this led to a conservative adaptation strategy that favors gradual changes over immediate reordering. Usage data is accumulated over time rather than acted upon instantly, and ranking updates are smoothed to prevent sudden layout shifts. This decision reduces short-term optimization but significantly improves usability and predictability.
+
+Manual customization introduced its own set of trade-offs. Supporting drag-and-drop reordering increases implementation complexity, particularly in maintaining consistent state between user-defined layouts and automatically computed rankings. Rather than allowing automatic adaptation to override manual changes immediately, the system explicitly prioritizes user-driven layouts and decays this influence over time. This results in slower adaptation but preserves user trust by ensuring that explicit actions are respected.
+
+The decision to require explicit user confirmation before applying AI-generated edits also reflects a deliberate trade-off. Automatically inserting AI output would reduce interaction cost, but it increases the risk of unintended or low-quality edits. By forcing all AI changes through a confirmation step and routing them through the same editing pipeline as manual input, the system sacrifices a small amount of speed in exchange for transparency, reversibility, and predictable behavior.
+
+Overall, the final design favors user control and system transparency over aggressive automation. While this approach may not maximize efficiency in every scenario, it aligns with the project’s goal of building an intelligent editor that users can understand, predict, and trust. The implementation demonstrates that adaptive and AI-assisted interfaces are most effective when intelligence is applied cautiously and remains subordinate to explicit user intent.
+
+\section{Validation}
+
+The system was validated using a combination of functional testing, performance observation, and informal usage-based evaluation. Given that this project introduces a novel integration of adaptive interface elements and a locally deployed AI assistant rather than a mature production system, the validation focuses on demonstrating correct behavior, coverage of intended interaction scenarios, and practical usability rather than large-scale quantitative user studies.
+
+\subsection{Functional Coverage and Correctness}
+
+Functional validation was first conducted to ensure that each major system component behaved as designed. The adaptive toolbar was tested across a range of usage patterns to verify that tool ordering reflected interaction frequency over time. Repeated tool activations resulted in visibly increased prominence, while less frequently used tools gradually moved to secondary positions. Manual drag-and-drop reordering was tested to confirm that user-defined layouts immediately took effect and persisted throughout the editing session without being overridden by automatic adaptation.
+
+The AI assistant was validated by executing common text-editing workflows, including paragraph rewriting, content expansion, and insertion at the cursor position. In all cases, the system correctly extracted editor context, generated responses using the local model, and applied edits only after explicit user confirmation. Undo and redo operations were tested after AI-applied edits to confirm that AI interactions were integrated into the standard editing pipeline rather than handled as special cases.
+
+\subsection{Usage-Based Evaluation}
+
+To evaluate real usage behavior, the editor was used interactively over extended editing sessions. This informal exploration demonstrated that adaptive reordering reduced the time spent locating frequently used tools compared to a static toolbar layout. Manual customization was frequently used to stabilize preferred layouts, particularly for formatting tools, suggesting that the hybrid control model successfully supported different user preferences.
+
+The session-based chat history in the AI assistant was also validated through iterative prompting. Users were able to revisit previous prompts, refine instructions, and selectively apply results, supporting incremental text improvement rather than one-shot generation. This behavior aligns with the intended design goal of positioning the AI assistant as a collaborative editing aid.
+
+\subsection{Performance Observations}
+
+Performance validation focused on responsiveness rather than raw throughput. Because the AI model is deployed locally, response latency depends on available hardware and model size. Lightweight models provided near-interactive response times suitable for frequent editing assistance, while larger models introduced noticeable delays. The system remained responsive during inference due to asynchronous request handling, and UI feedback clearly communicated processing states to users.
+
+Although no direct comparison was made against a cloud-based AI editor, the system demonstrates that locally hosted models can be effectively integrated into interactive tools when combined with appropriate UI signaling and confirmation-based workflows.
+
+\subsection{Summary of Validation Findings}
+
+Overall, validation results indicate that the system successfully supports its intended interaction space: adaptive tool usage, manual customization, and AI-assisted editing. While the evaluation is necessarily limited in scale, it demonstrates functional correctness, practical usability, and meaningful efficiency gains over a traditional static editor. These results suggest that the proposed design is a viable foundation for further refinement and larger-scale user studies.
+
+\section{Discussion and Future Work}
+The main strength of this project is the seamless integration of adaptive interface techniques with AI-assisted editing. The system demonstrates how personalization can occur both at the interface level and the content level. However, performance limitations from local AI deployment and minor UI smoothness issues remain.
+
+Future work includes optimizing toolbar animations, improving responsiveness, and exploring cloud-based or hybrid AI inference to reduce latency. Additional user studies could provide quantitative evidence of efficiency gains.
+
+\section{Conclusion}
+This project presents an adaptive intelligent text editor that reorganizes its toolbar based on user behavior and integrates an AI assistant for direct text manipulation. The prototype shows that adaptive interfaces can reduce interaction overhead and that AI assistance can simplify complex editing tasks. Together, these ideas point toward more personalized and efficient text editing environments.
+
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}
+
+
+
+\endinput
+%%
+%% End of file `sample-manuscript.tex'.

@@ -1,5 +1,4 @@
 // src/predictive/listRules.js
-// List-related predictive rules: bullets, numbered lists, exit list.
 
 (function (global) {
   /**

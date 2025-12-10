@@ -45,7 +45,7 @@
         document.execCommand('underline');
       },
       applyHeading(level) {
-        // Very simple: wrap current block as <h1> / <h2>
+
         const selection = global.getSelection();
         if (!selection || selection.rangeCount === 0) return;
         const range = selection.getRangeAt(0);
