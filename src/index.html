@@ -1,0 +1,51 @@
+<!-- src/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+    <title>Adaptive Text Editor - Stage 2</title>
+
+
+  <!-- Base styles -->
+
+  <link rel="stylesheet" href="./styles/base.css" />
+  <link rel="stylesheet" href="./styles/toolbar.css" />
+  <link rel="stylesheet" href="./styles/editor.css" />
+  <script src="./toolbar/usageTracker.js"></script>
+  <script src="./toolbar/adaptiveToolbarEngine.js"></script>
+  <script src="./toolbar/toolbarView.js"></script>
+  <script src="./predictive/listRules.js"></script>
+  <script src="./predictive/headingRules.js"></script>
+  <script src="./predictive/predictiveEngine.js"></script>
+
+</head>
+<body>
+  <div id="app">
+
+    <div id="toolbar">
+
+  <div class="toolbar-header">
+    <span>Toolbar</span>
+    <select id="toolbar-mode-select">
+      <!-- we will populate this in JS -->
+    </select>
+    <button id="toolbar-reset-sizes" class="toolbar-reset-btn" type="button">Reset sizes</button>
+  </div>
+  
+  <div id="toolbar-main"></div>
+  <div id="toolbar-more"></div>
+</div>
+
+
+    <div
+      id="editor"
+      class="editor"
+      contenteditable="true"
+      spellcheck="true"
+    ></div>
+  </div>
+
+  <!-- Renderer entry (as a module so we can use imports) -->
+  <script type="module" src="./renderer.js"></script>
+</body>
+</html>
