@@ -1,6 +1,5 @@
-// src/renderer.js
 import { createEditorAPI } from './editor/editorCore.js';
-import { initToolbar } from './toolbar/toolbarView.js';
+import { initAIUI } from './ai/aiAgent.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const editorEl = document.getElementById('editor');
@@ -11,9 +10,14 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Create an API for editor operations
   const editorAPI = createEditorAPI(editorEl);
+  window.editorCore = editorAPI; // expose for toolbarView.js
 
-  // Initialize the toolbar with fixed buttons
-  initToolbar(toolbarEl, editorAPI);
+  if (window.toolbarView && typeof window.toolbarView.initToolbarView === 'function') {
+    window.toolbarView.initToolbarView();
+  } else {
+    console.error('toolbarView not found on window');
+  }
+
+  initAIUI(editorEl);
 });

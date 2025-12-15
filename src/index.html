@@ -22,7 +22,7 @@
 <body>
   <div id="app">
 
-    <div id="toolbar">
+  <div id="toolbar">
 
   <div class="toolbar-header">
     <span>Toolbar</span>
@@ -35,6 +35,18 @@
   <div id="toolbar-main"></div>
   <div id="toolbar-more"></div>
 </div>
+
+      <div id="ai-panel">
+    <div class="ai-row">
+      <textarea id="ai-prompt" placeholder="Ask the AI to rewrite, shorten, or change tone..." rows="3"></textarea>
+      <div class="ai-actions">
+        <button id="ai-run" type="button">Ask AI</button>
+        <button id="ai-apply" type="button">Apply to selection</button>
+        <span id="ai-status">Idle</span>
+      </div>
+    </div>
+    <pre id="ai-output" aria-live="polite"></pre>
+  </div>
 
 
     <div
