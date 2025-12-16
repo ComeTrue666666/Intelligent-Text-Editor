@@ -69,6 +69,57 @@ export async function callAI(userPrompt, docText, selectionText) {
   return data?.response || '';
 }
 
+function cleanAIResponse(raw) {
+  if (!raw) return '';
+  let text = raw.trim();
+
+  // If the model wrapped output in a code fence, prefer the fenced body.
+  const fencedMatch = text.match(/```[a-z0-9]*\s*([\s\S]*?)```/i);
+  if (fencedMatch && fencedMatch[1]) {
+    text = fencedMatch[1].trim();
+  }
+
+  // Strip stray fences or surrounding quotes.
+  text = text.replace(/^```[a-z0-9]*\s*/i, '').replace(/\s*```$/i, '');
+  if (
+    (text.startsWith('"') && text.endsWith('"')) ||
+    (text.startsWith("'") && text.endsWith("'"))
+  ) {
+    text = text.slice(1, -1).trim();
+  }
+
+  // Turn escaped newlines/tabs into real characters.
+  text = text.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').replace(/\\t/g, '\t');
+
+  // If the model used --- as separators, take the first delimited block.
+  const lines = text.split(/\r?\n/);
+  const firstDash = lines.findIndex((l) => /^---\s*$/.test(l.trim()));
+  if (firstDash !== -1) {
+    const afterFirst = lines.slice(firstDash + 1);
+    const secondDash = afterFirst.findIndex((l) => /^---\s*$/.test(l.trim()));
+    if (secondDash !== -1) {
+      text = afterFirst.slice(0, secondDash).join('\n').trim();
+      return text;
+    }
+  }
+
+  // Drop common leading pleasantries.
+  const leadRegex =
+    /^(sure|absolutely|here(?:'| i)s|of course|gladly|no problem|alright|okay|ok|great|sounds good|happy to help|certainly|definitely|yep|yeah|got it|here you go|i (?:will|can|have))/i;
+  while (lines.length > 1 && (lines[0].trim() === '' || leadRegex.test(lines[0].trim()))) {
+    lines.shift();
+  }
+
+  // Drop common closing remarks.
+  const tailRegex =
+    /^(let me know|hope (?:this )?helps|want me to|anything else|need anything|does that work|feel free|i can adjust|i can tweak|happy to)/i;
+  while (lines.length > 1 && (lines[lines.length - 1].trim() === '' || tailRegex.test(lines[lines.length - 1].trim()))) {
+    lines.pop();
+  }
+
+  return lines.join('\n').trim();
+}
+
 function createRangeCoveringEditor(editorEl) {
   const range = document.createRange();
   range.selectNodeContents(editorEl);
@@ -79,42 +130,125 @@ function normalizeRangeForApply(editorEl, targetRange) {
   if (targetRange) return targetRange;
   const selection = document.getSelection();
   if (selection && selection.rangeCount) {
-    return selection.getRangeAt(0).cloneRange();
+    const candidate = selection.getRangeAt(0).cloneRange();
+    const container = candidate.commonAncestorContainer;
+    if (editorEl.contains(container)) {
+      return candidate;
+    }
   }
   return null;
+}
+
+function buildNodesFromText(text) {
+  const lines = text.split('\n');
+  const nodes = [];
+  lines.forEach((line, idx) => {
+    nodes.push(document.createTextNode(line));
+    if (idx !== lines.length - 1) {
+      nodes.push(document.createElement('br'));
+    }
+  });
+  return nodes;
 }
 
 export function applyTextToSelection(editorEl, text, targetRange = null) {
   if (!text) return;
   const range = normalizeRangeForApply(editorEl, targetRange);
+  const nodes = buildNodesFromText(text);
+
+  // If we failed to get a range, append to the editor instead.
   if (!range) {
-    editorEl.insertAdjacentText('beforeend', text);
+    const fragment = document.createDocumentFragment();
+    nodes.forEach((node) => fragment.appendChild(node));
+    editorEl.appendChild(fragment);
     return;
   }
 
   range.deleteContents();
-  const textNode = document.createTextNode(text);
-  range.insertNode(textNode);
+  const fragment = document.createDocumentFragment();
+  nodes.forEach((node) => fragment.appendChild(node));
+  const lastNode = fragment.lastChild;
+  range.insertNode(fragment);
 
-  // move caret to end of inserted text
-  const selection = document.getSelection();
-  const afterRange = document.createRange();
-  afterRange.setStartAfter(textNode);
-  afterRange.collapse(true);
-  selection?.removeAllRanges();
-  selection?.addRange(afterRange);
+  if (lastNode) {
+    const selection = document.getSelection();
+    const afterRange = document.createRange();
+    afterRange.setStartAfter(lastNode);
+    afterRange.collapse(true);
+    selection?.removeAllRanges();
+    selection?.addRange(afterRange);
+  }
 }
 
 export function initAIUI(editorEl) {
   const promptInput = document.getElementById('ai-prompt');
   const runBtn = document.getElementById('ai-run');
   const applyBtn = document.getElementById('ai-apply');
-  const outputEl = document.getElementById('ai-output');
+  const newChatBtn = document.getElementById('ai-new-chat');
+  const toggleHistoryBtn = document.getElementById('ai-toggle-history');
+  const historyEl = document.getElementById('ai-history');
   const statusEl = document.getElementById('ai-status');
 
-  if (!promptInput || !runBtn || !applyBtn || !outputEl) return;
+  if (
+    !promptInput ||
+    !runBtn ||
+    !applyBtn ||
+    !historyEl ||
+    !newChatBtn ||
+    !toggleHistoryBtn
+  ) {
+    return;
+  }
 
   let lastResponse = '';
+  let chatHistory = [];
+  let isHistoryCollapsed = false;
+
+  function renderHistory() {
+    historyEl.innerHTML = '';
+    chatHistory.forEach((entry) => {
+      const item = document.createElement('div');
+      item.className = 'ai-history-item';
+
+      const roleEl = document.createElement('div');
+      roleEl.className = 'ai-history-role';
+      roleEl.textContent = entry.role === 'user' ? 'You' : 'AI';
+
+      const textEl = document.createElement('div');
+      textEl.className = 'ai-history-text';
+      textEl.textContent = entry.text;
+
+      item.appendChild(roleEl);
+      item.appendChild(textEl);
+      historyEl.appendChild(item);
+    });
+    historyEl.scrollTop = historyEl.scrollHeight;
+  }
+
+  function addToHistory(role, text) {
+    if (!text) return;
+    chatHistory.push({ role, text });
+    renderHistory();
+  }
+
+  function resetChat() {
+    chatHistory = [];
+    lastResponse = '';
+    promptInput.value = '';
+    statusEl.textContent = 'Idle';
+    renderHistory();
+    setHistoryCollapsed(false);
+  }
+
+  function setHistoryCollapsed(collapsed) {
+    isHistoryCollapsed = collapsed;
+    historyEl.classList.toggle('collapsed', collapsed);
+    toggleHistoryBtn.textContent = collapsed ? 'Expand history' : 'Collapse history';
+    toggleHistoryBtn.setAttribute('aria-expanded', String(!collapsed));
+  }
+
+  setHistoryCollapsed(false);
+  renderHistory();
 
   function captureSelectionDetails() {
     const selection = document.getSelection();
@@ -142,8 +276,11 @@ export function initAIUI(editorEl) {
       : savedRange;
 
     try {
-      lastResponse = await callAI(prompt, docText, selectionTextForPrompt);
-      outputEl.textContent = lastResponse;
+      addToHistory('user', prompt);
+      const raw = await callAI(prompt, docText, selectionTextForPrompt);
+      lastResponse = cleanAIResponse(raw);
+
+      addToHistory('assistant', lastResponse);
       if (editIntent && lastResponse) {
         applyTextToSelection(editorEl, lastResponse, applyRange);
         statusEl.textContent = 'Applied';
@@ -152,7 +289,7 @@ export function initAIUI(editorEl) {
       }
     } catch (err) {
       statusEl.textContent = 'Error';
-      outputEl.textContent = err.message;
+      addToHistory('assistant', err.message);
     } finally {
       runBtn.disabled = false;
     }
@@ -162,5 +299,9 @@ export function initAIUI(editorEl) {
   applyBtn.addEventListener('click', () => {
     if (!lastResponse) return;
     applyTextToSelection(editorEl, lastResponse);
+  });
+  newChatBtn.addEventListener('click', resetChat);
+  toggleHistoryBtn.addEventListener('click', () => {
+    setHistoryCollapsed(!isHistoryCollapsed);
   });
 }

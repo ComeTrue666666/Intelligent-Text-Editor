@@ -21,40 +21,59 @@
 </head>
 <body>
   <div id="app">
+    <div class="workspace">
+      <div class="writing-column">
+        <div id="toolbar">
+          <div class="toolbar-header">
+            <span>Toolbar</span>
+            <div class="toolbar-actions">
+              <select id="toolbar-mode-select">
+                <!-- we will populate this in JS -->
+              </select>
+              <button id="toolbar-reset-sizes" class="toolbar-reset-btn" type="button">Reset sizes</button>
+              <button
+                id="theme-toggle"
+                class="toolbar-theme-toggle"
+                type="button"
+                aria-label="Toggle theme"
+                title="Toggle theme"
+              >
+                ☾
+              </button>
+            </div>
+          </div>
+          
+          <div id="toolbar-main"></div>
+          <div id="toolbar-more"></div>
+        </div>
 
-  <div id="toolbar">
+        <div
+          id="editor"
+          class="editor"
+          contenteditable="true"
+          spellcheck="true"
+        ></div>
+      </div>
 
-  <div class="toolbar-header">
-    <span>Toolbar</span>
-    <select id="toolbar-mode-select">
-      <!-- we will populate this in JS -->
-    </select>
-    <button id="toolbar-reset-sizes" class="toolbar-reset-btn" type="button">Reset sizes</button>
-  </div>
-  
-  <div id="toolbar-main"></div>
-  <div id="toolbar-more"></div>
-</div>
-
-      <div id="ai-panel">
-    <div class="ai-row">
-      <textarea id="ai-prompt" placeholder="Ask the AI to rewrite, shorten, or change tone..." rows="3"></textarea>
-      <div class="ai-actions">
-        <button id="ai-run" type="button">Ask AI</button>
-        <button id="ai-apply" type="button">Apply to selection</button>
-        <span id="ai-status">Idle</span>
+      <div class="assistant-column">
+        <div id="ai-panel">
+          <div class="ai-row">
+            <textarea id="ai-prompt" placeholder="Ask the AI to rewrite, shorten, or change tone..." rows="3"></textarea>
+            <div class="ai-actions">
+              <button id="ai-run" type="button">Ask AI</button>
+              <button id="ai-apply" type="button">Apply to selection</button>
+              <button id="ai-new-chat" type="button">New chat</button>
+              <button id="ai-toggle-history" type="button" aria-expanded="true">Collapse history</button>
+              <span id="ai-status">Idle</span>
+            </div>
+          </div>
+          <div class="ai-history-header">
+            <span>Chat history</span>
+          </div>
+          <div id="ai-history" class="ai-history" aria-live="polite"></div>
+        </div>
       </div>
     </div>
-    <pre id="ai-output" aria-live="polite"></pre>
-  </div>
-
-
-    <div
-      id="editor"
-      class="editor"
-      contenteditable="true"
-      spellcheck="true"
-    ></div>
   </div>
 
   <!-- Renderer entry (as a module so we can use imports) -->
