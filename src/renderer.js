@@ -5,6 +5,9 @@ import { initFileMenu } from './ui/fileMenu.js';
 window.addEventListener('DOMContentLoaded', () => {
   const editorEl = document.getElementById('editor');
   const toolbarEl = document.getElementById('toolbar');
+  const writingColumn = document.querySelector('.writing-column');
+  const assistantColumn = document.querySelector('.assistant-column');
+  const resizer = document.getElementById('column-resizer');
   const themeToggleBtn = document.getElementById('theme-toggle');
 
   if (!editorEl || !toolbarEl) {
@@ -23,6 +26,60 @@ window.addEventListener('DOMContentLoaded', () => {
 
   initAIUI(editorEl);
   initFileMenu(editorEl);
+
+  // Column resize behavior
+  if (resizer && writingColumn && assistantColumn) {
+    const workspace = document.querySelector('.workspace');
+    const MIN_LEFT = 400;
+    const MIN_RIGHT = 260;
+    let startX = 0;
+    let startLeft = 0;
+    let startRight = 0;
+
+    function applySizes(targetLeft) {
+      const available = workspace.getBoundingClientRect().width - resizer.offsetWidth;
+      const newLeft = Math.min(Math.max(MIN_LEFT, targetLeft), available - MIN_RIGHT);
+      const newRight = Math.max(MIN_RIGHT, available - newLeft);
+
+      writingColumn.style.flex = `1 1 ${newLeft}px`;
+      assistantColumn.style.flex = `0 0 ${newRight}px`;
+      writingColumn.style.width = '';
+      assistantColumn.style.width = '';
+    }
+
+    function onMouseMove(e) {
+      const delta = e.clientX - startX;
+      const targetLeft = startLeft + delta;
+      applySizes(targetLeft);
+    }
+
+    function stopResize() {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', stopResize);
+      document.body.style.userSelect = '';
+    }
+
+    function startResize(e) {
+      const leftRect = writingColumn.getBoundingClientRect();
+      const rightRect = assistantColumn.getBoundingClientRect();
+      startX = e.clientX;
+      startLeft = leftRect.width;
+      startRight = rightRect.width;
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', stopResize);
+      document.body.style.userSelect = 'none';
+    }
+
+    resizer.addEventListener('mousedown', startResize);
+    resizer.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        const delta = e.key === 'ArrowLeft' ? -20 : 20;
+        const currentLeft = writingColumn.getBoundingClientRect().width + delta;
+        applySizes(currentLeft);
+        e.preventDefault();
+      }
+    });
+  }
 
   function setTheme(theme) {
     const mode = theme === 'dark' ? 'dark' : 'light';
