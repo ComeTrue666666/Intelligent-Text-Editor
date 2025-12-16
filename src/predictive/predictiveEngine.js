@@ -143,7 +143,7 @@
     if (currentBlock && currentBlock.parentElement === editorEl) {
       previousBlock = currentBlock.previousElementSibling || null;
 
-      // "First line" = first non-empty block in editor
+ 
       let firstNonEmpty = null;
       let child = editorEl.firstElementChild;
       while (child) {
@@ -171,7 +171,7 @@
     const editorEl = getEditorElement();
     if (!editorEl) return;
 
-    // Only react to key events that originate inside the editor.
+
     if (event.target !== editorEl && !editorEl.contains(event.target)) {
       return;
     }
@@ -179,12 +179,12 @@
     const context = buildContext(event);
     if (!context) return;
 
-    // List rules: bullets & numbered lists, exit list on empty item.
+
     if (global.listRules && typeof global.listRules.applyListRules === 'function') {
       global.listRules.applyListRules(context);
     }
 
-    // Heading rules: title-like lines -> Heading 1.
+
     if (global.headingRules && typeof global.headingRules.applyHeadingRules === 'function') {
       global.headingRules.applyHeadingRules(context);
     }
@@ -202,12 +202,12 @@
     editorEl.addEventListener('keyup', onEditorKeyup);
   }
 
-  // Expose API in case you want to call init yourself
+
   global.predictiveEngine = {
     initPredictiveEngine,
   };
 
-  // Auto-init once DOM is ready
+
   document.addEventListener('DOMContentLoaded', () => {
     initPredictiveEngine();
   });

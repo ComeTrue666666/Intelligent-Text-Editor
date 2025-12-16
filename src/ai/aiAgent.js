@@ -222,6 +222,8 @@ export function initAIUI(editorEl) {
   const runBtn = document.getElementById('ai-run');
   const applyBtn = document.getElementById('ai-apply');
   const newChatBtn = document.getElementById('ai-new-chat');
+  const uploadBtn = document.getElementById('ai-upload');
+  const uploadInput = document.getElementById('ai-upload-input');
   const toggleHistoryBtn = document.getElementById('ai-toggle-history');
   const historyEl = document.getElementById('ai-history');
   const statusEl = document.getElementById('ai-status');
@@ -232,7 +234,9 @@ export function initAIUI(editorEl) {
     !applyBtn ||
     !historyEl ||
     !newChatBtn ||
-    !toggleHistoryBtn
+    !toggleHistoryBtn ||
+    !uploadBtn ||
+    !uploadInput
   ) {
     return;
   }
@@ -240,6 +244,7 @@ export function initAIUI(editorEl) {
   let lastResponse = '';
   let chatHistory = [];
   let isHistoryCollapsed = false;
+  let uploadedDoc = { name: '', text: '', type: '', size: 0 };
 
   function renderHistory() {
     historyEl.innerHTML = '';
@@ -271,6 +276,7 @@ export function initAIUI(editorEl) {
   function resetChat() {
     chatHistory = [];
     lastResponse = '';
+    uploadedDoc = { name: '', text: '', type: '', size: 0 };
     promptInput.value = '';
     statusEl.textContent = 'Idle';
     renderHistory();
@@ -307,7 +313,10 @@ export function initAIUI(editorEl) {
     runBtn.disabled = true;
     const editIntent = isEditingIntent(prompt);
     const { text: selectedText, range: savedRange } = captureSelectionDetails();
-    const docText = editorEl.innerText;
+    const docText = uploadedDoc.text
+      ? `${editorEl.innerText || ''}\n\n[Uploaded: ${uploadedDoc.name} | type: ${uploadedDoc.type ||
+          'unknown'} | size: ${uploadedDoc.size} bytes]\n${uploadedDoc.text}`
+      : editorEl.innerText;
     const selectionTextForPrompt = selectedText || (editIntent ? docText : '');
     const applyRange = editIntent
       ? savedRange || createRangeCoveringEditor(editorEl)
@@ -337,6 +346,59 @@ export function initAIUI(editorEl) {
   applyBtn.addEventListener('click', () => {
     if (!lastResponse) return;
     applyTextToSelection(editorEl, lastResponse);
+  });
+  uploadBtn.addEventListener('click', () => uploadInput.click());
+  uploadInput.addEventListener('change', () => {
+    const file = uploadInput.files && uploadInput.files[0];
+    if (!file) return;
+    const isTextLike =
+      file.type.startsWith('text/') ||
+      /\.((txt|md|csv|json|log|html?|htm))$/i.test(file.name);
+    const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+    const isImage = file.type.startsWith('image/');
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const raw = reader.result;
+      let content = '';
+
+      if (isTextLike) {
+        content = String(raw || '');
+      } else if (typeof raw === 'string') {
+        // data URL
+        const MAX_SNIPPET = 1200;
+        content = raw.length > MAX_SNIPPET ? `${raw.slice(0, MAX_SNIPPET)}...` : raw;
+      } else if (raw instanceof ArrayBuffer) {
+        const bytes = new Uint8Array(raw).slice(0, 4000);
+        content = btoa(String.fromCharCode(...bytes));
+        content = `base64:${content}`;
+      } else {
+        content = '[Unsupported content]';
+      }
+
+      uploadedDoc = {
+        name: file.name,
+        text: content,
+        type: file.type || 'unknown',
+        size: file.size || 0,
+      };
+      statusEl.textContent = `Uploaded: ${file.name}`;
+    };
+
+    reader.onerror = () => {
+      statusEl.textContent = 'Upload failed';
+    };
+
+    if (isTextLike) {
+      reader.readAsText(file);
+    } else if (isPdf || isImage) {
+      reader.readAsDataURL(file);
+    } else {
+      reader.readAsArrayBuffer(file);
+    }
+    // Reset input so same file can be uploaded again if desired
+    uploadInput.value = '';
   });
   newChatBtn.addEventListener('click', resetChat);
   toggleHistoryBtn.addEventListener('click', () => {

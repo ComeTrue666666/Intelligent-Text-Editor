@@ -43,7 +43,7 @@
             <span>Toolbar</span>
             <div class="toolbar-actions">
               <select id="toolbar-mode-select">
-                <!-- we will populate this in JS -->
+
               </select>
               <button id="toolbar-reset-sizes" class="toolbar-reset-btn" type="button">Reset sizes</button>
               <button
@@ -77,15 +77,22 @@
           <div class="ai-row">
             <textarea id="ai-prompt" placeholder="Ask the AI to rewrite, shorten, or change tone..." rows="3"></textarea>
             <div class="ai-actions">
-              <button id="ai-run" type="button">Ask AI</button>
-              <button id="ai-apply" type="button">Apply to selection</button>
-              <button id="ai-new-chat" type="button">New chat</button>
-              <button id="ai-toggle-history" type="button" aria-expanded="true">Collapse history</button>
+              <input
+                id="ai-upload-input"
+                type="file"
+                accept=".txt,.md,.csv,.json,.log,.html,.htm,.pdf,image/*"
+                hidden
+              />
+              <button id="ai-run" type="button" class="ai-button-primary">Ask AI</button>
+              <button id="ai-apply" type="button" aria-label="Apply to selection" title="Apply to selection">⤵</button>
+              <button id="ai-upload" type="button" aria-label="Upload document" title="Upload document">⭳</button>
+              <button id="ai-toggle-history" type="button" aria-expanded="true" aria-label="Collapse history" title="Collapse history">▾</button>
               <span id="ai-status">Idle</span>
             </div>
           </div>
           <div class="ai-history-header">
             <span>Chat history</span>
+            <button id="ai-new-chat" type="button" aria-label="New chat" title="New chat">⟳</button>
           </div>
           <div id="ai-history" class="ai-history" aria-live="polite"></div>
         </div>
@@ -93,7 +100,7 @@
     </div>
   </div>
 
-  <!-- Renderer entry (as a module so we can use imports) -->
+
   <script type="module" src="./renderer.js"></script>
 </body>
 </html>

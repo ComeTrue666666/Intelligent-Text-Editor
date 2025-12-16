@@ -149,21 +149,44 @@ body {
 #ai-panel .ai-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 #ai-panel button {
   background: var(--button-primary);
   color: var(--button-primary-text);
   border: none;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
 }
 #ai-panel button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+#ai-panel .ai-actions .ai-button-primary {
+  font-weight: 700;
+}
+
+#ai-panel .ai-actions button:not(.ai-button-primary) {
+  min-width: 32px;
+  padding: 8px 10px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+
+#ai-panel .ai-actions button:not(.ai-button-primary):hover {
+  background: var(--history-bg);
+}
+
+#ai-toggle-history {
+  min-width: 26px;
+  padding: 6px 8px;
+  font-size: 12px;
 }
 
 #ai-status {
@@ -176,10 +199,16 @@ body {
   font-size: 14px;
   color: var(--text);
   order: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .ai-history {
-  max-height: 200px;
+  flex: 1 1 320px;
+  min-height: 240px;
+  max-height: 520px;
   overflow-y: auto;
   border: 1px solid var(--border);
   border-radius: 4px;
