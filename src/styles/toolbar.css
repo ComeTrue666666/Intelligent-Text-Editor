@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
   justify-content: flex-start;
 }
 
@@ -81,13 +81,13 @@
 .toolbar-button {
   border: 1px solid var(--border-strong);
   background: var(--history-bg);
-  padding: 4px 12px;
-  border-radius: 4px;
+  padding: 3px 8px;
+  border-radius: 3px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 14px;
-  min-width: 32px;
-  line-height: 1.2;
+  font-size: 13px;
+  min-width: 28px;
+  line-height: 1.1;
   color: var(--text);
   transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
   transform: scale(var(--usage-scale, 1));
@@ -101,12 +101,12 @@
 .toolbar-control {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   border: 1px solid var(--border-strong);
   background: var(--history-bg);
-  padding: 4px 8px;
-  border-radius: 4px;
-  min-height: 30px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  min-height: 28px;
   color: var(--text);
 }
 
@@ -115,16 +115,16 @@
   font-size: 12px;
   color: var(--text);
   background: var(--border);
-  border-radius: 4px;
-  padding: 2px 6px;
+  border-radius: 3px;
+  padding: 2px 5px;
   letter-spacing: 0.5px;
 }
 
 .toolbar-control__select,
 .toolbar-control__input {
   border: 1px solid var(--border-strong);
-  border-radius: 4px;
-  padding: 4px 6px;
+  border-radius: 3px;
+  padding: 3px 5px;
   background: var(--surface);
   font-weight: 600;
   font-size: 13px;
@@ -199,7 +199,7 @@
 
 #toolbar-main,
 #toolbar-more {
-  min-height: 40px;
+  min-height: 32px;
 }
 
 

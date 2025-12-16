@@ -510,11 +510,6 @@
   });
 
   if (moreContainer && extraTools.length > 0) {
-    const label = document.createElement('div');
-    label.className = 'toolbar-more-label';
-    label.textContent = 'More:';
-    moreContainer.appendChild(label);
-
     extraTools.forEach((tool) => {
       const btn = createToolElement(tool, usageContext);
       btn.classList.add('toolbar-button--secondary');
