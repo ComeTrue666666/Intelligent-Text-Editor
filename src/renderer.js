@@ -5,6 +5,7 @@ import { initFileMenu } from './ui/fileMenu.js';
 window.addEventListener('DOMContentLoaded', () => {
   const editorEl = document.getElementById('editor');
   const toolbarEl = document.getElementById('toolbar');
+  const toolbarPositionSelect = document.getElementById('toolbar-position-select');
   const writingColumn = document.querySelector('.writing-column');
   const assistantColumn = document.querySelector('.assistant-column');
   const resizer = document.getElementById('column-resizer');
@@ -26,6 +27,39 @@ window.addEventListener('DOMContentLoaded', () => {
 
   initAIUI(editorEl);
   initFileMenu(editorEl);
+
+  // Toolbar position control
+  const POSITION_KEY = 'toolbar-position';
+  const allowedPositions = ['top', 'bottom', 'left', 'right'];
+
+  function applyToolbarPosition(position) {
+    const pos = allowedPositions.includes(position) ? position : 'top';
+    allowedPositions.forEach((p) => {
+      document.body.classList.remove(`toolbar-pos-${p}`);
+    });
+    document.body.classList.add(`toolbar-pos-${pos}`);
+    if (toolbarPositionSelect) {
+      toolbarPositionSelect.value = pos;
+    }
+    try {
+      localStorage.setItem(POSITION_KEY, pos);
+    } catch (err) {
+      console.warn('Unable to persist toolbar position', err);
+    }
+  }
+
+  const savedPosition = (() => {
+    try {
+      return localStorage.getItem(POSITION_KEY);
+    } catch {
+      return null;
+    }
+  })();
+  applyToolbarPosition(savedPosition || 'top');
+
+  toolbarPositionSelect?.addEventListener('change', () => {
+    applyToolbarPosition(toolbarPositionSelect.value);
+  });
 
   // Column resize behavior
   if (resizer && writingColumn && assistantColumn) {

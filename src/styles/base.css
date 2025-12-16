@@ -72,6 +72,53 @@ body {
   min-width: 0;
 }
 
+.toolbar-pos-bottom .writing-column {
+  flex-direction: column;
+}
+
+.toolbar-pos-bottom #toolbar {
+  order: 2;
+}
+
+.toolbar-pos-bottom #editor {
+  order: 1;
+}
+
+.toolbar-pos-left .writing-column,
+.toolbar-pos-right .writing-column {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.toolbar-pos-left #toolbar,
+.toolbar-pos-right #toolbar {
+  width: 96px;
+  min-width: 80px;
+  max-width: 128px;
+  align-self: stretch;
+}
+
+.toolbar-pos-left #editor,
+.toolbar-pos-right #editor {
+  flex: 1 1 auto;
+}
+
+.toolbar-pos-left #toolbar {
+  order: 0;
+}
+
+.toolbar-pos-left #editor {
+  order: 1;
+}
+
+.toolbar-pos-right #editor {
+  order: 0;
+}
+
+.toolbar-pos-right #toolbar {
+  order: 1;
+}
+
 .assistant-column {
   width: 340px;
   max-width: none;
