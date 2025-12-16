@@ -117,7 +117,44 @@ function cleanAIResponse(raw) {
     lines.pop();
   }
 
-  return lines.join('\n').trim();
+  text = lines.join('\n').trim();
+  text = stripFinalAnswerMarker(text);
+  text = dedupeParagraphs(text);
+  return text;
+}
+
+function stripFinalAnswerMarker(text) {
+  const match = text.match(/final answer\s*:?/i);
+  if (!match) return text;
+  const idx = match.index + match[0].length;
+  const after = text.slice(idx).trim();
+  return after || text;
+}
+
+function dedupeParagraphs(text) {
+  const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  if (paragraphs.length <= 1) return text;
+
+  const seen = [];
+  const unique = [];
+
+  const normalize = (p) =>
+    p
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/[^\w\s]/g, '')
+      .trim();
+
+  paragraphs.forEach((p) => {
+    const norm = normalize(p);
+    const isDup = seen.some((prev) => norm === prev || norm.includes(prev) || prev.includes(norm));
+    if (!isDup) {
+      seen.push(norm);
+      unique.push(p);
+    }
+  });
+
+  return unique.join('\n\n').trim();
 }
 
 function createRangeCoveringEditor(editorEl) {
@@ -265,6 +302,7 @@ export function initAIUI(editorEl) {
   async function runAgent() {
     const prompt = promptInput.value.trim();
     if (!prompt) return;
+    promptInput.value = '';
     statusEl.textContent = 'Thinking...';
     runBtn.disabled = true;
     const editIntent = isEditingIntent(prompt);

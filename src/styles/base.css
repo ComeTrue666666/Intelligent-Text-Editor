@@ -124,12 +124,15 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: relative;
 }
 
 .ai-row {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  order: 2;
+  z-index: 1;
 }
 
 #ai-panel textarea {
@@ -172,6 +175,7 @@ body {
   font-weight: 600;
   font-size: 14px;
   color: var(--text);
+  order: 0;
 }
 
 .ai-history {
@@ -184,6 +188,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  order: 1;
 }
 
 .ai-history.collapsed {
