@@ -25,6 +25,21 @@
       <div class="writing-column">
         <div id="toolbar">
           <div class="toolbar-header">
+            <div class="toolbar-tabs">
+              <button
+                id="file-tab-toggle"
+                class="toolbar-tab"
+                type="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                File
+              </button>
+              <div id="file-menu" class="toolbar-tab-menu" hidden>
+                <button id="save-as-txt" type="button">Save as .txt</button>
+                <button id="save-as-pdf" type="button">Save as PDF</button>
+              </div>
+            </div>
             <span>Toolbar</span>
             <div class="toolbar-actions">
               <select id="toolbar-mode-select">

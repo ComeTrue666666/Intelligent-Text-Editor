@@ -6,27 +6,102 @@
   align-self: stretch;
   width: 100%;
   margin: 0;
-  padding: 8px 12px;
+  padding: 6px 12px;
   background: var(--surface-alt);         /* different from the white editor surface */
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   box-shadow: 0 10px 30px var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
+  position: sticky;
+  top: 12px;
+  z-index: 10;
 }
 
 .toolbar-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   border-bottom: 1px solid var(--border-strong);
 }
 
 .toolbar-header span {
   font-weight: 700;
   color: var(--text);
+}
+
+.toolbar-tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-tab {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.toolbar-tab::after {
+  content: 'v';
+  margin-left: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.toolbar-tab:hover {
+  background: var(--border);
+  border-color: var(--border-strong);
+  transform: translateY(-0.5px);
+}
+
+.toolbar-tab:focus-visible {
+  outline: 2px solid var(--button-primary);
+  outline-offset: 2px;
+}
+
+.toolbar-tab-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px var(--shadow);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 20;
+}
+
+.toolbar-tab-menu[hidden] {
+  display: none;
+}
+
+.toolbar-tab-menu button {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 8px 10px;
+  border-radius: 6px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.toolbar-tab-menu button:hover {
+  background: var(--history-bg);
+  border-color: var(--border-strong);
 }
 
 .toolbar-actions {
@@ -41,8 +116,8 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
-  justify-content: flex-start;
+  gap: 2px;
+  justify-content: center;
 }
 
 .toolbar-more-label {
@@ -81,7 +156,7 @@
 .toolbar-button {
   border: 1px solid var(--border-strong);
   background: var(--history-bg);
-  padding: 3px 8px;
+  padding: 3px 7px;
   border-radius: 3px;
   cursor: pointer;
   font-weight: 600;
@@ -101,7 +176,7 @@
 .toolbar-control {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   border: 1px solid var(--border-strong);
   background: var(--history-bg);
   padding: 3px 6px;
@@ -199,7 +274,7 @@
 
 #toolbar-main,
 #toolbar-more {
-  min-height: 32px;
+  min-height: 28px;
 }
 
 

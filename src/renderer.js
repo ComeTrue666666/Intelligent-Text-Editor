@@ -1,5 +1,6 @@
 import { createEditorAPI } from './editor/editorCore.js';
 import { initAIUI } from './ai/aiAgent.js';
+import { initFileMenu } from './ui/fileMenu.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const editorEl = document.getElementById('editor');
@@ -21,6 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   initAIUI(editorEl);
+  initFileMenu(editorEl);
 
   function setTheme(theme) {
     const mode = theme === 'dark' ? 'dark' : 'light';
